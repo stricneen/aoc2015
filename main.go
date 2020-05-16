@@ -13,15 +13,44 @@ import (
 
 func main() {
 	day2()
+
+	//fmt.Println(required("2x3x4"))
+	//fmt.Println(required("1x1x10"))
 }
 
 func required(ln string) int {
-	fmt.Println(ln)
-	x := strings.Split(ln, "x")
-	i, err := strconv.Atoi(x[0])
+	//fmt.Println(ln)
+	dims := strings.Split(ln, "x")
+	w, err := strconv.Atoi(dims[0])
 	check(err)
-	return i
+	h, err := strconv.Atoi(dims[1])
+	check(err)
+	b, err := strconv.Atoi(dims[2])
+	check(err)
+
+	x := w * h
+	y := b * h
+	z := w * b
+
+	extra := min(x, y, z)
+
+	r := (2 * x) + (2 * y) + (2 * z) + extra
+	//fmt.Println(r)
+
+	return r
 }
+
+func min(a, b, c int) int {
+	if a < b && a < c {
+		return a
+	}
+	if b < a && b < c {
+		return b
+	}
+	return c
+}
+
+// 1608378
 
 func day2() {
 	file, err := os.Open("day2.txt")

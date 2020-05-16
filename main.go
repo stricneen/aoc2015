@@ -2,12 +2,49 @@ package main
 
 import (
 	//   "io"
+	"bufio"
 	"fmt"
 	"io/ioutil"
+	"log"
+	"os"
+	"strconv"
 	"strings"
 )
 
 func main() {
+	day2()
+}
+
+func required(ln string) int {
+	fmt.Println(ln)
+	x := strings.Split(ln, "x")
+	i, err := strconv.Atoi(x[0])
+	check(err)
+	return i
+}
+
+func day2() {
+	file, err := os.Open("day2.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	c := 0
+	for scanner.Scan() {
+
+		r := required(scanner.Text())
+		c += r
+		// fmt.Println(scanner.Text())
+	}
+	fmt.Println(c)
+	if err := scanner.Err(); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func day1() {
 	data := input()
 
 	// part 1
@@ -23,10 +60,10 @@ func main() {
 			break
 		}
 		if rune == '(' {
-			c += 1
+			c++
 		}
 		if rune == ')' {
-			c -= 1
+			c--
 		}
 	}
 }

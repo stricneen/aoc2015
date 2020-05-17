@@ -1,6 +1,8 @@
 package main
 
-import "io/ioutil"
+import (
+	"io/ioutil"
+)
 
 func input(filename string) string {
 	dat, err := ioutil.ReadFile(filename)

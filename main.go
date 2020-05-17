@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -14,12 +15,13 @@ import (
 func main() {
 	day2()
 
-	//fmt.Println(required("2x3x4"))
-	//fmt.Println(required("1x1x10"))
+	// 	fmt.Println(required("2x3x4"))
+	// 	fmt.Println(required("1x1x10"))
+	// 	fmt.Println(required("3x3x7"))
+	// 	fmt.Println(required("1x1x1"))
 }
 
-func required(ln string) int {
-	//fmt.Println(ln)
+func extract(ln string) (int, int, int) {
 	dims := strings.Split(ln, "x")
 	w, err := strconv.Atoi(dims[0])
 	check(err)
@@ -27,29 +29,29 @@ func required(ln string) int {
 	check(err)
 	b, err := strconv.Atoi(dims[2])
 	check(err)
+	ints := []int{w, h, b}
+	sort.Ints(ints)
+	return ints[0], ints[1], ints[2]
+}
 
-	x := w * h
-	y := b * h
-	z := w * b
+func required(ln string) int {
 
-	extra := min(x, y, z)
+	x, y, z := extract(ln)
+	// x := w * h
+	// y := b * h
+	// z := w * b
 
-	r := (2 * x) + (2 * y) + (2 * z) + extra
-	//fmt.Println(r)
+	// extra := min(x, y, z)
+
+	r := 3*x*y + 2*x*z + 2*y*z
+
+	// fmt.Println(ln)
+	// fmt.Println(r)
 
 	return r
 }
 
-func min(a, b, c int) int {
-	if a < b && a < c {
-		return a
-	}
-	if b < a && b < c {
-		return b
-	}
-	return c
-}
-
+//  101578
 // 1608378
 
 func day2() {
@@ -63,9 +65,9 @@ func day2() {
 	c := 0
 	for scanner.Scan() {
 
-		r := required(scanner.Text())
-		c += r
-		// fmt.Println(scanner.Text())
+		c += required(scanner.Text())
+		fmt.Println(c)
+		//time.Sleep(time.Second)
 	}
 	fmt.Println(c)
 	if err := scanner.Err(); err != nil {
@@ -95,6 +97,16 @@ func day1() {
 			c--
 		}
 	}
+}
+
+func min(a, b, c int) int {
+	if a < b && a < c {
+		return a
+	}
+	if b < a && b < c {
+		return b
+	}
+	return c
 }
 
 func input() string {

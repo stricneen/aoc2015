@@ -4,6 +4,10 @@ import (
 	"io/ioutil"
 )
 
+type pair struct {
+	a, b interface{}
+}
+
 func input(filename string) string {
 	dat, err := ioutil.ReadFile(filename)
 	check(err)

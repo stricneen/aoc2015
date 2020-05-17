@@ -7,12 +7,18 @@ func Day3() {
 	data := input("data/day3.txt")
 	set := make(map[pair]bool)
 
-	m := pair{0, 0}
-	set[m] = true
+	santa := pair{0, 0}
+	robo := pair{0, 0}
+	set[santa] = true
 
-	for _, r := range data {
-		m = move(r, m)
-		set[m] = true
+	for i, r := range data {
+		if i%2 == 0 {
+			santa = move(r, santa)
+			set[santa] = true
+		} else {
+			robo = move(r, robo)
+			set[robo] = true
+		}
 	}
 
 	fmt.Println(len(set))

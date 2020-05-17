@@ -10,6 +10,26 @@ import (
 	"strings"
 )
 
+func Day2() {
+	file, err := os.Open("data/day2.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	c := 0
+	for scanner.Scan() {
+
+		c += wrapping(scanner.Text())
+
+	}
+	fmt.Println(c)
+	if err := scanner.Err(); err != nil {
+		log.Fatal(err)
+	}
+}
+
 func extract(ln string) (int, int, int) {
 	dims := strings.Split(ln, "x")
 	w, err := strconv.Atoi(dims[0])
@@ -27,24 +47,4 @@ func wrapping(ln string) int {
 	x, y, z := extract(ln)
 	r := 3*x*y + 2*x*z + 2*y*z
 	return r
-}
-
-func day2() {
-	file, err := os.Open("day2.txt")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
-	c := 0
-	for scanner.Scan() {
-
-		c += wrapping(scanner.Text())
-
-	}
-	fmt.Println(c)
-	if err := scanner.Err(); err != nil {
-		log.Fatal(err)
-	}
 }

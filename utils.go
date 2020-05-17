@@ -2,8 +2,8 @@ package main
 
 import "io/ioutil"
 
-func input() string {
-	dat, err := ioutil.ReadFile("data/day1.txt")
+func input(filename string) string {
+	dat, err := ioutil.ReadFile(filename)
 	check(err)
 	return string(dat)
 }

@@ -7,7 +7,7 @@ import (
 
 // Day1 is here
 func Day1() {
-	data := input()
+	data := input("data/day1.txt")
 
 	// part 1
 	up := strings.Count(data, "(")

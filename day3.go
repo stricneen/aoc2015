@@ -7,41 +7,32 @@ func Day3() {
 	data := input("data/day3.txt")
 	set := make(map[pair]bool)
 
-	a := 0
-	b := 0
-	m := pair{a, b}
+	m := pair{0, 0}
 	set[m] = true
 
-	for _, rune := range data {
-		//fmt.Println(rune)
-		if rune == '^' {
-			a++
-		}
-		if rune == '>' {
-			b++
-		}
-		if rune == '<' {
-			b--
-		}
-		if rune == 'v' {
-			a--
-		}
-
-		n := pair{a, b}
-		set[n] = true
+	for _, r := range data {
+		m = move(r, m)
+		set[m] = true
 	}
 
 	fmt.Println(len(set))
-
 }
 
-// func move(rune int, pos pair) pair {
-// 	a := pos.a
-// 	b := pos.b
+func move(r rune, p pair) pair {
+	a := p.a.(int)
+	b := p.b.(int)
 
-// 	if rune == '^' {
-// 		return pair{a + 1, b}
-// 	}
-
-// 	return pos
-// }
+	if r == '^' {
+		a++
+	}
+	if r == 'v' {
+		a--
+	}
+	if r == '>' {
+		b++
+	}
+	if r == '<' {
+		b--
+	}
+	return pair{a, b}
+}

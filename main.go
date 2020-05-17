@@ -3,5 +3,5 @@ package main
 //   "io"
 
 func main() {
-	Day3()
+	Day4()
 }

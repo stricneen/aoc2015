@@ -16,7 +16,7 @@ type rect struct {
 
 func onScan6(scan *bufio.Scanner) {
 
-	var lights [1000][1000]bool
+	var lights [1000][1000]int
 
 	for scan.Scan() {
 		ln := scan.Text()
@@ -36,26 +36,29 @@ func onScan6(scan *bufio.Scanner) {
 
 }
 
-func toggle(mat *[1000][1000]bool, r rect) {
+func toggle(mat *[1000][1000]int, r rect) {
 	for i := r.x1; i <= r.x2; i++ {
 		for j := r.y1; j <= r.y2; j++ {
-			mat[i][j] = !mat[i][j]
+			mat[i][j] = mat[i][j] + 2
 		}
 	}
 }
 
-func on(mat *[1000][1000]bool, r rect) {
+func on(mat *[1000][1000]int, r rect) {
 	for i := r.x1; i <= r.x2; i++ {
 		for j := r.y1; j <= r.y2; j++ {
-			mat[i][j] = true
+			mat[i][j]++
 		}
 	}
 }
 
-func off(mat *[1000][1000]bool, r rect) {
+func off(mat *[1000][1000]int, r rect) {
 	for i := r.x1; i <= r.x2; i++ {
 		for j := r.y1; j <= r.y2; j++ {
-			mat[i][j] = false
+			mat[i][j]--
+			if mat[i][j] < 0 {
+				mat[i][j] = 0
+			}
 		}
 	}
 }
@@ -84,13 +87,14 @@ func parse(ln string) (string, rect) {
 
 }
 
-func howMany(mat [1000][1000]bool) {
+// 17325717
+
+func howMany(mat [1000][1000]int) {
 	var c, i, j int
 	for i = 0; i < 1000; i++ {
 		for j = 0; j < 1000; j++ {
-			if mat[i][j] {
-				c++
-			}
+			c += mat[i][j]
+
 		}
 	}
 	fmt.Println(c)

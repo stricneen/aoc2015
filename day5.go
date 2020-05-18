@@ -3,8 +3,6 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"log"
-	"os"
 	"strings"
 )
 
@@ -44,7 +42,6 @@ func isNice2(ln string) bool {
 	return twoPair(ln) && surround(ln)
 }
 
-// 336 too high
 func twoPair(ln string) bool {
 	for i := 0; i < len(ln)-2; i++ {
 		check := ln[i : i+2]
@@ -82,21 +79,9 @@ func onScan(scan *bufio.Scanner) {
 	}
 	fmt.Println("Part 1 : ", c1)
 	fmt.Println("Part 2 : ", c2)
-
 }
 
 // Day5 is here
 func Day5() {
-	file, err := os.Open("data/day5.txt")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
-	onScan(scanner)
-
-	if err := scanner.Err(); err != nil {
-		log.Fatal(err)
-	}
+	scan("data/day5.txt", onScan)
 }

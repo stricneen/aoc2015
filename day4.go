@@ -16,7 +16,7 @@ func Day4() {
 	for c > 0 {
 		data := input + strconv.Itoa(c)
 		hash := md5Hash(data)
-		if hash[0:6] == "000000" {
+		if hash[0:7] == "0000000" {
 			break
 		}
 		c++

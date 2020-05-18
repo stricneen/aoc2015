@@ -8,6 +8,10 @@ import (
 	"strings"
 )
 
+func isNice1(ln string) bool {
+	return hasThreeVowels(ln) && isValid(ln) && hasPair(ln)
+}
+
 func hasThreeVowels(ln string) bool {
 	as := strings.Count(ln, "a")
 	es := strings.Count(ln, "e")
@@ -36,20 +40,49 @@ func hasPair(ln string) bool {
 	return false
 }
 
-func isNice(ln string) bool {
-	return hasThreeVowels(ln) && isValid(ln) && hasPair(ln)
+func isNice2(ln string) bool {
+	return twoPair(ln) && surround(ln)
+}
+
+// 336 too high
+func twoPair(ln string) bool {
+	for i := 0; i < len(ln)-2; i++ {
+		check := ln[i : i+2]
+		c := strings.Count(ln, check)
+		if c > 1 {
+			return true
+		}
+	}
+	return false
+}
+
+func surround(ln string) bool {
+	for i := 0; i < len(ln)-2; i++ {
+		if ln[i] == ln[i+2] {
+			return true
+		}
+	}
+	return false
 }
 
 func onScan(scan *bufio.Scanner) {
-	c := 0
+	c1 := 0
+	c2 := 0
 	for scan.Scan() {
 		ln := scan.Text()
-		nice := isNice(ln)
-		if nice {
-			c++
+		nice1 := isNice1(ln)
+		nice2 := isNice2(ln)
+
+		if nice1 {
+			c1++
+		}
+		if nice2 {
+			c2++
 		}
 	}
-	fmt.Println(c)
+	fmt.Println("Part 1 : ", c1)
+	fmt.Println("Part 2 : ", c2)
+
 }
 
 // Day5 is here

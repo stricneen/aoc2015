@@ -79,11 +79,10 @@ func parse(ln string) (string, rect) {
 		x1, y1 := parseCoords(s[1])
 		x2, y2 := parseCoords(s[3])
 		return "toggle", rect{x1, y1, x2, y2}
-	} else {
-		x1, y1 := parseCoords(s[2])
-		x2, y2 := parseCoords(s[4])
-		return s[1], rect{x1, y1, x2, y2}
 	}
+	x1, y1 := parseCoords(s[2])
+	x2, y2 := parseCoords(s[4])
+	return s[1], rect{x1, y1, x2, y2}
 
 }
 

@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -32,6 +33,14 @@ func scan(filename string, f onScanFunc) {
 	if err := scanner.Err(); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func ps(s string) {
+	fmt.Println(s)
+}
+
+func pi(s int) {
+	fmt.Println(s)
 }
 
 func check(e error) {

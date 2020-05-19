@@ -9,6 +9,9 @@ func onScanT(scan *bufio.Scanner) {
 
 	for scan.Scan() {
 		ln := scan.Text()
+		if ln == "#" {
+			break
+		}
 		fmt.Println(ln)
 	}
 

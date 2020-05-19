@@ -1,8 +1,3 @@
-London to Dublin = 464
-London to Belfast = 518
-Dublin to Belfast = 141
-#
-
 Tristram to AlphaCentauri = 34
 Tristram to Snowdin = 100
 Tristram to Tambi = 63

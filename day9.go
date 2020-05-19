@@ -55,20 +55,48 @@ func onScan9(scan *bufio.Scanner) {
 		c++
 	}
 
+	min := 10000
+	max := 0
+	//var mind dist
+
 	for i := 0; i < len(locations)/2; i++ {
 		perm(locations, func(p []string) {
 
 			ft := getDist(p, x)
 
-			fmt.Println(p)
-			fmt.Println(ft)
+			if ft < min {
+				min = ft
+			}
 
+			if ft > max {
+				max = ft
+			}
 		}, i)
 	}
+	fmt.Println("Min", min)
+	fmt.Println("Max", max)
 }
 
 func getDist(locs []string, d map[dist]int) int {
+	//fmt.Println(locs)
+	//fmt.Println(d)
+	c := 0
+	for i := 1; i < len(locs); i++ {
+		d := distBetween(locs[i-1], locs[i], d)
+		c += d
+	}
+
+	return c
+}
+
+func distBetween(a string, b string, d map[dist]int) int {
+	for k := range d {
+		if (k.from == a && k.to == b) || (k.from == b && k.to == a) {
+			return k.distance
+		}
+	}
 	return 0
+
 }
 
 func parse9(ln string) dist {

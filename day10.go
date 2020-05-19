@@ -8,14 +8,28 @@ import (
 // Day10 is here
 func Day10() {
 
-	start := "3113322113"
+	start := "4"
 	r := ""
 	ps(start)
 
-	for i := 0; i < 40; i++ {
+	// after 50
+	// 3
+	// 1355550
+
+	// 4
+	// 1355550
+
+	var t int
+	for i := 0; i < 20; i++ {
+
 		r = step(start)
-		//ps(r)
-		pi(i)
+		fmt.Println("   ", len(r)-t)
+		//psi(r, 40)
+		//		pi(i)
+		t = len(r)
+		pi(t)
+
+		ps("")
 		start = r
 	}
 

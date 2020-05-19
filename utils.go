@@ -39,6 +39,11 @@ func ps(s string) {
 	fmt.Println(s)
 }
 
+func psi(s string, col int) {
+	fmt.Printf("%80v", s)
+	//fmt.Println(s)
+}
+
 func pi(s int) {
 	fmt.Println(s)
 }

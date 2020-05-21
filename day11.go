@@ -1,14 +1,10 @@
 package main
 
-import (
-	"fmt"
-	"strings"
-)
-
 // Day11 is here
 func Day11() {
 	start := "vzbxkghb"
-
+	//start := "aaaxkffb"
+	//start := "ghijklmn" //abcdffaa
 	ps(start)
 	n := start
 	for i := 0; i < 30; i++ {
@@ -18,18 +14,42 @@ func Day11() {
 }
 
 func isValidPassword(in string) bool {
-	return strings.Contains(in, "q")
+
+	hp := false
+	for i := 0; i < len(in)-2; i++ {
+		if in[i] == in[i+1]-1 && in[i+1] == in[i+2]-1 {
+			hp = true
+			break
+		}
+	}
+
+	var pairs [6]byte
+	index := 0
+	for i := 0; i < len(in)-1; i++ {
+		if in[i] == in[i+1] {
+			pairs[index] = in[i]
+			index++
+			i++
+		}
+	}
+
+	c := 0
+	for i := 0; i < len(pairs)-1; i++ {
+		if pairs[i] != pairs[i+1] && pairs[i] != 0 {
+			c++
+		}
+	}
+
+	return c > 1 && hp
 }
 
 func next(in string) string {
 	n := in
-
 	valid := false
 	for valid == false {
 		n = inc(n)
 		n = ilo(n)
 		valid = isValidPassword(n)
-		fmt.Println(valid, n)
 	}
 	return n
 }

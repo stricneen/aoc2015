@@ -1,31 +1,33 @@
 package main
 
-import "fmt"
-
 // Day11 is here
 func Day11() {
-
 	start := "vzbxkghb"
 
-	n := next(start)
-
 	ps(start)
-	ps(n)
+	n := start
+	for i := 0; i < 30; i++ {
+		n = next(n)
+		ps(n)
+	}
 
 }
 
 func next(in string) string {
 	ret := ""
+	carry := true
 	for k := range in {
 		x := in[len(in)-1-k]
-		if x < 122 {
-			ret += string(x + 1)
-		} else {
-			ret += "a"
-
+		n := x
+		if carry {
+			n++
+			if n == 123 {
+				n = 97
+			} else {
+				carry = false
+			}
 		}
-		fmt.Println(x)
-		// now k starts from the end
+		ret = string(n) + ret
 	}
 	return ret
 

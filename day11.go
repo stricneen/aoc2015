@@ -3,11 +3,9 @@ package main
 // Day11 is here
 func Day11() {
 	start := "vzbxkghb"
-	//start := "aaaxkffb"
-	//start := "ghijklmn" //abcdffaa
 	ps(start)
 	n := start
-	for i := 0; i < 30; i++ {
+	for i := 0; i < 2; i++ {
 		n = next(n)
 		ps(n)
 	}

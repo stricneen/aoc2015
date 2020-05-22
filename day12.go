@@ -6,6 +6,15 @@ import (
 	"reflect"
 )
 
+func hasNoRed(m map[string]interface{}) bool {
+	for _, v := range m {
+		if v == "red" {
+			return false
+		}
+	}
+	return true
+}
+
 // map string slice struct
 // 10326
 func sum(m interface{}) int {
@@ -13,16 +22,18 @@ func sum(m interface{}) int {
 	typ := reflect.TypeOf(m).Kind()
 	switch typ {
 
-	case reflect.Slice:
+	case reflect.Slice: // json array
 		t := m.([]interface{})
 		for i := 0; i < len(t); i++ {
 			c += sum(t[i])
 		}
 
-	case reflect.Map:
+	case reflect.Map: // json object
 		t := m.(map[string]interface{})
-		for _, v := range t {
-			c += sum(v)
+		if hasNoRed(t) {
+			for _, v := range t {
+				c += sum(v)
+			}
 		}
 	// 	fmt.Println(s)
 	// 	sum(s)

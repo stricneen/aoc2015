@@ -18,20 +18,6 @@ type route struct {
 	distance int
 }
 
-// Permute the values at index i to len(a)-1.
-func perm(a []string, f func([]string), i int) {
-	if i > len(a) {
-		f(a)
-		return
-	}
-	perm(a, f, i+1)
-	for j := i + 1; j < len(a); j++ {
-		a[i], a[j] = a[j], a[i]
-		perm(a, f, i+1)
-		a[i], a[j] = a[j], a[i]
-	}
-}
-
 func onScan9(scan *bufio.Scanner) {
 	x := make(map[dist]int)
 	y := make(map[string]bool)

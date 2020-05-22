@@ -20,6 +20,29 @@ func input(filename string) string {
 
 type onScanFunc func(*bufio.Scanner)
 
+// Permute the values at index i to len(a)-1.
+func perm(a []string, f func([]string), i int) {
+	if i > len(a) {
+		f(a)
+		return
+	}
+	perm(a, f, i+1)
+	for j := i + 1; j < len(a); j++ {
+		a[i], a[j] = a[j], a[i]
+		perm(a, f, i+1)
+		a[i], a[j] = a[j], a[i]
+	}
+}
+
+func contains(a []string, i string) bool {
+	for _, ii := range a {
+		if ii == i {
+			return true
+		}
+	}
+	return false
+}
+
 func scan(filename string, f onScanFunc) {
 	file, err := os.Open(filename)
 	if err != nil {

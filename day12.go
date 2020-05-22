@@ -7,35 +7,33 @@ import (
 )
 
 // map string slice struct
-
+// 10326
 func sum(m interface{}) int {
-
+	c := 0
 	typ := reflect.TypeOf(m).Kind()
-	fmt.Println("type", typ)
 	switch typ {
 
 	case reflect.Slice:
-		// s := reflect.ValueOf(m)
-		// for i := 0; i < s.Len(); i++ {
-		// 	t := s.Index(i)
-		// 	t2 := reflect.TypeOf(t).Kind()
-		// 	//fmt.Println(s.Index(i))
-		// 	fmt.Println(t, t2)
-		// 	sum(s)
-		// }
+		t := m.([]interface{})
+		for i := 0; i < len(t); i++ {
+			c += sum(t[i])
+		}
 
-	// case reflect.Map:
-	// 	s := reflect.ValueOf(m)
+	case reflect.Map:
+		t := m.(map[string]interface{})
+		for _, v := range t {
+			c += sum(v)
+		}
 	// 	fmt.Println(s)
 	// 	sum(s)
 
 	case reflect.Struct:
-		//		s := reflect.ValueOf(m)
-
+		// No action
+		// s := reflect.ValueOf(m)
 		// fmt.Println("s", s)
 		// fmt.Println("")
-		//sum(s)
-		return 1
+		// sum(s)
+		// return 1
 
 	case reflect.String: // string and numbers
 		// No action
@@ -46,10 +44,10 @@ func sum(m interface{}) int {
 		// }
 	case reflect.Float64:
 		t := m.(float64)
-		return int(t)
+		c += int(t)
 	}
 
-	return 0
+	return c
 }
 
 // Day12 is here

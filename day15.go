@@ -69,9 +69,9 @@ func Day15() {
 		ingredients[2].amount = x[2]
 		ingredients[3].amount = x[3]
 
-		s := score(ingredients)
-
-		if s > max {
+		s, c := score(ingredients)
+		//fmt.Println(c)
+		if s > max && c == 500 {
 			max = s
 		}
 	}
@@ -82,13 +82,14 @@ func Day15() {
 
 }
 
-func score(in []ingredient) int {
+func score(in []ingredient) (int, int) {
 	s := ingredient{"score", 0, 0, 0, 0, 0, 0}
 	for _, i := range in {
 		s.capacity += i.capacity * i.amount
 		s.durability += i.durability * i.amount
 		s.flavor += i.flavor * i.amount
 		s.texture += i.texture * i.amount
+		s.calories += i.calories * i.amount
 	}
 
 	pos := func(i int) int {
@@ -102,8 +103,9 @@ func score(in []ingredient) int {
 	s.durability = pos(s.durability)
 	s.flavor = pos(s.flavor)
 	s.texture = pos(s.texture)
+	s.calories = pos(s.calories)
 
-	return s.capacity * s.durability * s.flavor * s.texture
+	return s.capacity * s.durability * s.flavor * s.texture, s.calories
 }
 
 var test15 = []ingredient{

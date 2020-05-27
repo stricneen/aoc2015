@@ -3,28 +3,51 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"strings"
 )
-
-func surroundGrid(grid [][]string) [][]string {
-	r := len(grid)
-	ret := makeGrid(r + 2)
-	//	c := len(i[0])
-	for x, i := range grid {
-		for y := range i {
-			ret[x+1][y+1] = grid[x][y]
-		}
-	}
-
-	return ret
-}
 
 func stepGrid(grid [][]string) [][]string {
 
 	// r := len(grid)
 	// c := len(grid[0])
 	//	ret := makeGrid(len(grid))
+	ret := makeGrid(len(grid))
+	wrap := wrapGrid(grid)
+	//printGrid(wrap)
 
-	ret := surroundGrid(grid)
+	for i := 1; i <= len(grid); i++ {
+		for j := 1; j <= len(grid); j++ {
+
+			x := wrap[i-1][j-1] + wrap[i][j-1] + wrap[i+1][j-1] + wrap[i-1][j] + wrap[i+1][j] + wrap[i-1][j+1] + wrap[i][j+1] + wrap[i+1][j+1]
+			y := strings.Count(x, "#")
+			//fmt.Println(x)
+			if grid[i-1][j-1] == "#" {
+
+				if y == 2 || y == 3 {
+					ret[i-1][j-1] = "#"
+				} else {
+					ret[i-1][j-1] = "."
+				}
+
+			} else {
+				if y == 3 {
+					ret[i-1][j-1] = "#"
+				} else {
+					ret[i-1][j-1] = "."
+				}
+
+			}
+
+		}
+	}
+
+	ret[0][0] = "#"
+	ret[0][99] = "#"
+	ret[99][0] = "#"
+	ret[99][99] = "#"
+
+	// ret2 := unwrapGrid(ret)
+	// printGrid(ret2)
 
 	// for x, r := range grid {
 	// 	for y := range r {
@@ -82,9 +105,31 @@ func printGrid(i [][]string) {
 	}
 }
 
+func wrapGrid(grid [][]string) [][]string {
+	r := len(grid)
+	ret := makeGrid(r + 2)
+	for x, i := range grid {
+		for y := range i {
+			ret[x+1][y+1] = grid[x][y]
+		}
+	}
+	return ret
+}
+
+func unwrapGrid(grid [][]string) [][]string {
+	r := len(grid)
+	ret := makeGrid(r - 2)
+	for x, i := range ret {
+		for y := range i {
+			ret[x][y] = grid[x+1][y+1]
+		}
+	}
+	return ret
+}
+
 func onScan18(scan *bufio.Scanner) {
 
-	grid := makeGrid(6)
+	grid := makeGrid(100)
 
 	r := 0
 	for scan.Scan() {
@@ -100,12 +145,19 @@ func onScan18(scan *bufio.Scanner) {
 		//	fmt.Println(ln)
 	}
 
-	printGrid(grid)
+	c := 0
+	//printGrid(grid)
 	s1 := stepGrid(grid)
-	printGrid(s1)
+	//printGrid(s1)
+	for c < 99 {
 
-	c := count(grid)
-	fmt.Println(c)
+		s1 = stepGrid(s1)
+		//printGrid(s1)
+
+		c++
+	}
+
+	fmt.Println(count(s1))
 }
 
 // Day18 is here

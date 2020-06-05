@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 type spell struct {
 	cost   int
 	damage int
@@ -14,13 +16,12 @@ type game struct {
 	bossDamage    int
 
 	effects []string
+
+	winner string
 }
 
 // Day22 is
 func Day22() {
-
-	// bossHitPoint := 51
-	// bossDamage := 9
 
 	init := make([]game, 0)
 	start := append(init, initialGameStateTest1())
@@ -29,7 +30,7 @@ func Day22() {
 
 func initialGameStateTest1() game {
 	effects := make([]string, 0)
-	return game{10, 250, 13, 8, effects}
+	return game{10, 250, 13, 8, effects, ""}
 }
 
 func tick(games []game) []game {
@@ -39,9 +40,13 @@ func tick(games []game) []game {
 
 	for _, g := range games {
 
-		// Apply each possible
+		if len(g.winner) > 0 {
+			continue
+		}
+
+		fmt.Println(g)
 		// Magic Missile costs 53 mana. It instantly does 4 damage.
-		n := game{g.playerHitPoints, g.playerMama - 53, g.bossHitPoints - 4, g.bossDamage, effect}
+		n := checkWin(game{g.playerHitPoints, g.playerMama - 53, g.bossHitPoints - 4, g.bossDamage, effect, ""})
 		next = append(next, n)
 		//  playerHitPoints  int
 		// 	playerMama       int
@@ -56,8 +61,32 @@ func tick(games []game) []game {
 
 	}
 
-	return next
+	if allWon(next) {
+		return next
+	}
 
+	return tick(next)
+
+}
+
+func allWon(games []game) bool {
+	for _, x := range games {
+		if len(x.winner) == 0 {
+			return false
+		}
+	}
+	return true
+}
+
+func checkWin(g game) game {
+	r := g
+	if g.playerHitPoints < 1 {
+		r.winner = "boss"
+	}
+	if g.bossHitPoints < 1 {
+		r.winner = "wizard"
+	}
+	return r
 }
 
 // playerHitPoints int

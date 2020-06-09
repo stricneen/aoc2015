@@ -7,6 +7,8 @@ type effect struct {
 	ttl  int
 }
 
+type effectFn func(game) game
+
 type game struct {
 	playerHitPoints int
 	playerMama      int
@@ -18,12 +20,6 @@ type game struct {
 
 	winner    string
 	manaSpent int
-
-	//pastMoves []game
-}
-
-func (g game) Hello() {
-
 }
 
 // Day22 is
@@ -32,30 +28,17 @@ func Day22() {
 	init := make([]game, 0)
 	start := append(init, initialGameStateTest1())
 
-	// Recharge
-	// Shield
-	// Drain
-	// Poison
-	// Magic Missile
-	// g1 := recharge(initialGameStateTest1())
-	// g2 := shield(g1)
-	// g3 := drain(g2)
-	// g4 := poison(g3)
-	// g5 := missle(g4)
-
-	// fmt.Println(g5.manaSpent)
-	// return
-
 	results := tick(start)
 
 	minMana := 100000
 	for _, v := range results {
+		if v.winner == "wizard" {
+			fmt.Println(v)
+		}
 		if v.winner == "wizard" && v.manaSpent < minMana {
 			minMana = v.manaSpent
 		}
 	}
-
-	//fmt.Println(results)
 	fmt.Println("Lowest", minMana)
 }
 
@@ -66,150 +49,38 @@ func initialGameStateTest1() game {
 	//return game{10, 250, 13, 8, effects, "", 0}
 }
 
-func missle(g game) game {
-	// Magic Missile costs 53 mana. It instantly does 4 damage.
-	// g = hard(g)
-	// if len(g.winner) > 0 {
-	// 	printIfWon(g)
-	// 	return g
-	// }
-
-	g = applyEffects(g)
-	if len(g.winner) > 0 {
-		return g
-	}
-
-	g = checkWin(game{g.playerHitPoints, g.playerMama - 53, g.bossHitPoints - 4, g.bossDamage, g.effects, "", g.manaSpent + 53})
-	if len(g.winner) > 0 {
-		return g
-	}
-
-	g = applyEffects(g)
-	if len(g.winner) > 0 {
-		return g
-	}
-
-	g = checkWin(game{g.playerHitPoints - g.bossDamage + armor(g), g.playerMama, g.bossHitPoints, g.bossDamage, g.effects, "", g.manaSpent})
-	return g
-
-}
-
-func drain(g game) game {
-	// Drain costs 73 mana. It instantly does 2 damage and heals you for 2 hit points.
-	// g = hard(g)
-	// if len(g.winner) > 0 {
-	// 	printIfWon(g)
-	// 	return g
-	// }
-
-	g = applyEffects(g)
-	if len(g.winner) > 0 {
-		return g
-	}
-
-	g = checkWin(game{g.playerHitPoints + 2, g.playerMama - 73, g.bossHitPoints - 2, g.bossDamage, g.effects, "", g.manaSpent + 73})
-	if len(g.winner) > 0 {
-		return g
-	}
-
-	g = applyEffects(g)
-	if len(g.winner) > 0 {
-		return g
-	}
-
-	g = checkWin(game{g.playerHitPoints - g.bossDamage + armor(g), g.playerMama, g.bossHitPoints, g.bossDamage, g.effects, "", g.manaSpent})
-	return g
-
-}
-
-func shield(g game) game {
-	// Shield costs 113 mana. It starts an effect that lasts for 6 turns. While it is active, your armor is increased by 7.
-	// g = hard(g)
-	// if len(g.winner) > 0 {
-	// 	printIfWon(g)
-	// 	return g
-	// }
-
-	g = applyEffects(g)
-	if won(g) {
-		return g
-	}
-
-	g.effects = append(g.effects, effect{"shield", 6})
-	g = checkWin(game{g.playerHitPoints, g.playerMama - 113, g.bossHitPoints, g.bossDamage, g.effects, "", g.manaSpent + 113})
-	if won(g) {
-		return g
-	}
-
-	g = applyEffects(g)
-	if won(g) {
-		return g
-	}
-
-	g = checkWin(game{g.playerHitPoints - g.bossDamage + armor(g), g.playerMama, g.bossHitPoints, g.bossDamage, g.effects, "", g.manaSpent})
-	return g
-}
-
-func recharge(g game) game {
-	// Recharge costs 229 mana. It starts an effect that lasts for 5 turns. At the start of each turn while it is active, it gives you 101 new mana.
-	// g = hard(g)
-	// if len(g.winner) > 0 {
-	// 	printIfWon(g)
-	// 	return g
-	// }
-
-	g = applyEffects(g)
-	if len(g.winner) > 0 {
-		return g
-	}
-
-	g.effects = append(g.effects, effect{"recharge", 5})
-	g = checkWin(game{g.playerHitPoints, g.playerMama - 229, g.bossHitPoints, g.bossDamage, g.effects, "", g.manaSpent + 229})
-	if len(g.winner) > 0 {
-		return g
-	}
-
-	g = applyEffects(g)
-	if len(g.winner) > 0 {
-		return g
-	}
-
-	g = checkWin(game{g.playerHitPoints - g.bossDamage + armor(g), g.playerMama, g.bossHitPoints, g.bossDamage, g.effects, "", g.manaSpent})
-	return g
-}
-
-func poison(g game) game {
+func turn(g game, spell effectFn) game {
 
 	g = hard(g)
 	if won(g) {
 		return g
 	}
 
-	// Poison costs 173 mana. It starts an effect that lasts for 6 turns. At the start of each turn while it is active, it deals the boss 3 damage.
 	g = applyEffects(g)
-	if len(g.winner) > 0 {
+	if won(g) {
 		return g
 	}
 
-	g.effects = append(g.effects, effect{"poison", 6})
-	g = checkWin(game{g.playerHitPoints, g.playerMama - 173, g.bossHitPoints, g.bossDamage, g.effects, "", g.manaSpent + 173})
-	if len(g.winner) > 0 {
+	g = spell(g)
+	g = checkWin(g)
+	if won(g) {
 		return g
 	}
 
 	g = applyEffects(g)
-	if len(g.winner) > 0 {
+	if won(g) {
 		return g
 	}
 
 	g = checkWin(game{g.playerHitPoints - g.bossDamage + armor(g), g.playerMama, g.bossHitPoints, g.bossDamage, g.effects, "", g.manaSpent})
 	return g
+
 }
 
 func hard(g game) game {
 	//return g
 	r := g
-	r.playerHitPoints--
+	//r.playerHitPoints--
 	return checkWin(r)
 }
 
@@ -264,37 +135,38 @@ func tick(games []game) []game {
 			continue
 		}
 
-		// g.playerHitPoints--
-		// g = checkWin(g)
-		// if won(g) {
-		// 	next = append(next, g)
-		// 	continue
-		// }
-
 		if canCast(g, "missle", 53) {
-			next = append(next, missle(g))
+			next = append(next, turn(g, func(g game) game {
+				return game{g.playerHitPoints, g.playerMama - 53, g.bossHitPoints - 4, g.bossDamage, g.effects, "", g.manaSpent + 53}
+			}))
 		}
 
 		if canCast(g, "recharge", 229) {
-			next = append(next, recharge(g))
+			next = append(next, turn(g, func(g game) game {
+				g.effects = append(g.effects, effect{"recharge", 5})
+				return game{g.playerHitPoints, g.playerMama - 229, g.bossHitPoints, g.bossDamage, g.effects, "", g.manaSpent + 229}
+			}))
 		}
 
 		if canCast(g, "shield", 113) {
-			next = append(next, shield(g))
+			next = append(next, turn(g, func(g game) game {
+				g.effects = append(g.effects, effect{"shield", 6})
+				return game{g.playerHitPoints, g.playerMama - 113, g.bossHitPoints, g.bossDamage, g.effects, "", g.manaSpent + 113}
+			}))
 		}
 
 		if canCast(g, "drain", 73) {
-			next = append(next, drain(g))
+			next = append(next, turn(g, func(g game) game {
+				return game{g.playerHitPoints + 2, g.playerMama - 73, g.bossHitPoints - 2, g.bossDamage, g.effects, "", g.manaSpent + 73}
+			}))
 		}
 
 		if canCast(g, "poison", 173) {
-			next = append(next, poison(g))
+			next = append(next, turn(g, func(g game) game {
+				g.effects = append(g.effects, effect{"poison", 6})
+				return game{g.playerHitPoints, g.playerMama - 173, g.bossHitPoints, g.bossDamage, g.effects, "", g.manaSpent + 173}
+			}))
 		}
-
-		// Drain costs 73 mana. It instantly does 2 damage and heals you for 2 hit points.
-		// Shield costs 113 mana. It starts an effect that lasts for 6 turns. While it is active, your armor is increased by 7.
-		// Recharge costs 229 mana. It starts an effect that lasts for 5 turns. At the start of each turn while it is active, it gives you 101 new mana.
-
 	}
 
 	if allWon(next) {

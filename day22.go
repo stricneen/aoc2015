@@ -62,67 +62,73 @@ func Day22() {
 func initialGameStateTest1() game {
 	effects := make([]effect, 0)
 	return game{50, 500, 51, 9, effects, "", 0}
-	return game{10, 250, 14, 8, effects, "", 0}
-
+	//return game{10, 250, 14, 8, effects, "", 0}
 	//return game{10, 250, 13, 8, effects, "", 0}
 }
 
 func missle(g game) game {
 	// Magic Missile costs 53 mana. It instantly does 4 damage.
+	// g = hard(g)
+	// if len(g.winner) > 0 {
+	// 	printIfWon(g)
+	// 	return g
+	// }
 
 	g = applyEffects(g)
 	if len(g.winner) > 0 {
-		printIfWon(g)
 		return g
 	}
 
 	g = checkWin(game{g.playerHitPoints, g.playerMama - 53, g.bossHitPoints - 4, g.bossDamage, g.effects, "", g.manaSpent + 53})
 	if len(g.winner) > 0 {
-		printIfWon(g)
 		return g
 	}
 
 	g = applyEffects(g)
 	if len(g.winner) > 0 {
-		printIfWon(g)
 		return g
 	}
 
 	g = checkWin(game{g.playerHitPoints - g.bossDamage + armor(g), g.playerMama, g.bossHitPoints, g.bossDamage, g.effects, "", g.manaSpent})
-	printIfWon(g)
 	return g
 
 }
 
 func drain(g game) game {
 	// Drain costs 73 mana. It instantly does 2 damage and heals you for 2 hit points.
+	// g = hard(g)
+	// if len(g.winner) > 0 {
+	// 	printIfWon(g)
+	// 	return g
+	// }
 
 	g = applyEffects(g)
 	if len(g.winner) > 0 {
-		printIfWon(g)
 		return g
 	}
 
 	g = checkWin(game{g.playerHitPoints + 2, g.playerMama - 73, g.bossHitPoints - 2, g.bossDamage, g.effects, "", g.manaSpent + 73})
 	if len(g.winner) > 0 {
-		printIfWon(g)
 		return g
 	}
 
 	g = applyEffects(g)
 	if len(g.winner) > 0 {
-		printIfWon(g)
 		return g
 	}
 
 	g = checkWin(game{g.playerHitPoints - g.bossDamage + armor(g), g.playerMama, g.bossHitPoints, g.bossDamage, g.effects, "", g.manaSpent})
-	printIfWon(g)
 	return g
 
 }
 
 func shield(g game) game {
 	// Shield costs 113 mana. It starts an effect that lasts for 6 turns. While it is active, your armor is increased by 7.
+	// g = hard(g)
+	// if len(g.winner) > 0 {
+	// 	printIfWon(g)
+	// 	return g
+	// }
 
 	g = applyEffects(g)
 	if won(g) {
@@ -141,62 +147,70 @@ func shield(g game) game {
 	}
 
 	g = checkWin(game{g.playerHitPoints - g.bossDamage + armor(g), g.playerMama, g.bossHitPoints, g.bossDamage, g.effects, "", g.manaSpent})
-	printIfWon(g)
 	return g
 }
 
 func recharge(g game) game {
 	// Recharge costs 229 mana. It starts an effect that lasts for 5 turns. At the start of each turn while it is active, it gives you 101 new mana.
+	// g = hard(g)
+	// if len(g.winner) > 0 {
+	// 	printIfWon(g)
+	// 	return g
+	// }
 
 	g = applyEffects(g)
 	if len(g.winner) > 0 {
-		printIfWon(g)
 		return g
 	}
 
 	g.effects = append(g.effects, effect{"recharge", 5})
 	g = checkWin(game{g.playerHitPoints, g.playerMama - 229, g.bossHitPoints, g.bossDamage, g.effects, "", g.manaSpent + 229})
 	if len(g.winner) > 0 {
-		printIfWon(g)
 		return g
 	}
 
 	g = applyEffects(g)
 	if len(g.winner) > 0 {
-		printIfWon(g)
 		return g
 	}
 
 	g = checkWin(game{g.playerHitPoints - g.bossDamage + armor(g), g.playerMama, g.bossHitPoints, g.bossDamage, g.effects, "", g.manaSpent})
-	printIfWon(g)
 	return g
 }
 
 func poison(g game) game {
 
+	g = hard(g)
+	if won(g) {
+		return g
+	}
+
 	// Poison costs 173 mana. It starts an effect that lasts for 6 turns. At the start of each turn while it is active, it deals the boss 3 damage.
 	g = applyEffects(g)
 	if len(g.winner) > 0 {
-		printIfWon(g)
 		return g
 	}
 
 	g.effects = append(g.effects, effect{"poison", 6})
 	g = checkWin(game{g.playerHitPoints, g.playerMama - 173, g.bossHitPoints, g.bossDamage, g.effects, "", g.manaSpent + 173})
 	if len(g.winner) > 0 {
-		printIfWon(g)
 		return g
 	}
 
 	g = applyEffects(g)
 	if len(g.winner) > 0 {
-		printIfWon(g)
 		return g
 	}
 
 	g = checkWin(game{g.playerHitPoints - g.bossDamage + armor(g), g.playerMama, g.bossHitPoints, g.bossDamage, g.effects, "", g.manaSpent})
-	printIfWon(g)
 	return g
+}
+
+func hard(g game) game {
+	//return g
+	r := g
+	r.playerHitPoints--
+	return checkWin(r)
 }
 
 func armor(g game) int {
@@ -237,8 +251,7 @@ func applyEffects(g game) game {
 	return checkWin(n)
 }
 
-// tl 671
-// t1 558
+// th 1242
 
 func tick(games []game) []game {
 
@@ -250,6 +263,13 @@ func tick(games []game) []game {
 			next = append(next, g)
 			continue
 		}
+
+		// g.playerHitPoints--
+		// g = checkWin(g)
+		// if won(g) {
+		// 	next = append(next, g)
+		// 	continue
+		// }
 
 		if canCast(g, "missle", 53) {
 			next = append(next, missle(g))
@@ -285,25 +305,11 @@ func tick(games []game) []game {
 
 }
 
-var min int = 100000
-
 func won(g game) bool {
 	if len(g.winner) > 0 {
-		printIfWon(g)
 		return true
 	}
 	return false
-}
-
-func printIfWon(g game) {
-	if g.manaSpent < min && g.winner == "wizard" {
-		min = g.manaSpent
-		fmt.Println(min)
-	}
-
-	// if g.winner != "" {
-	// 	fmt.Println(g.winner, g.manaSpent)
-	// }
 }
 
 func canCast(g game, effect string, cost int) bool {

@@ -61,7 +61,7 @@ func Day22() {
 
 func initialGameStateTest1() game {
 	effects := make([]effect, 0)
-	//return game{50, 500, 51, 9, effects, "", 0}
+	return game{50, 500, 51, 9, effects, "", 0}
 	return game{10, 250, 14, 8, effects, "", 0}
 
 	//return game{10, 250, 13, 8, effects, "", 0}
@@ -238,6 +238,7 @@ func applyEffects(g game) game {
 }
 
 // tl 671
+// t1 558
 
 func tick(games []game) []game {
 
@@ -250,7 +251,9 @@ func tick(games []game) []game {
 			continue
 		}
 
-		next = append(next, missle(g))
+		if canCast(g, "missle", 53) {
+			next = append(next, missle(g))
+		}
 
 		if canCast(g, "recharge", 229) {
 			next = append(next, recharge(g))
@@ -260,7 +263,9 @@ func tick(games []game) []game {
 			next = append(next, shield(g))
 		}
 
-		next = append(next, drain(g))
+		if canCast(g, "drain", 73) {
+			next = append(next, drain(g))
+		}
 
 		if canCast(g, "poison", 173) {
 			next = append(next, poison(g))
@@ -303,11 +308,11 @@ func printIfWon(g game) {
 
 func canCast(g game, effect string, cost int) bool {
 	for _, s := range g.effects {
-		if s.name == effect && g.playerMama < cost {
+		if s.name == effect {
 			return false
 		}
 	}
-	return true
+	return g.playerMama >= cost
 }
 
 func allWon(games []game) bool {

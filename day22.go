@@ -32,9 +32,9 @@ func Day22() {
 
 	minMana := 100000
 	for _, v := range results {
-		if v.winner == "wizard" {
-			fmt.Println(v)
-		}
+		// if v.winner == "wizard" {
+		// 	fmt.Println(v)
+		// }
 		if v.winner == "wizard" && v.manaSpent < minMana {
 			minMana = v.manaSpent
 		}
@@ -78,14 +78,17 @@ func turn(g game, spell effectFn) game {
 }
 
 func hard(g game) game {
-	//return g
 	r := g
-	//r.playerHitPoints--
+	r.playerHitPoints--
 	return checkWin(r)
 }
 
 func armor(g game) int {
 	for _, v := range g.effects {
+		// if v.name == "shield" && v.ttl == 0 {
+		// 	fmt.Println("balls")
+		// }
+
 		if v.name == "shield" {
 			return 7
 		}

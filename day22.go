@@ -37,15 +37,11 @@ func Day22() {
 				next = append(next, v)
 			}
 		}
-
 		results = tick(next)
 	}
 
 	minMana := 100000
 	for _, v := range results {
-		// if v.winner == "wizard" {
-		// 	fmt.Println(v)
-		// }
 		if v.winner == "wizard" && v.manaSpent < minMana {
 			minMana = v.manaSpent
 		}
@@ -55,19 +51,28 @@ func Day22() {
 
 func initialGameStateTest1() game {
 	effects := make([]effect, 0)
-	return game{50, 500, 51, 9, effects, "", 0} // 9000
+	return game{50, 500, 51, 9, effects, "", 0} // 900
 	//return game{10, 250, 14, 8, effects, "", 0} // 641
 	//return game{10, 250, 13, 8, effects, "", 0} // 226
 }
 
-func turn(g game, spell effectFn) game {
+func turn(c game, spell effectFn) game {
 
-	// PLayer turn
-	g = hard(g)
-	if won(g) {
+	g := game{
+		c.playerHitPoints - 1,
+		c.playerMama,
+		c.bossHitPoints,
+		c.bossDamage,
+		c.effects,
+		c.winner,
+		c.manaSpent}
+
+	if g.playerHitPoints == 0 {
+		g.winner = "boss"
 		return g
 	}
 
+	// Apply effects
 	g = applyEffects(g)
 	if won(g) {
 		return g
@@ -92,7 +97,7 @@ func turn(g game, spell effectFn) game {
 
 func hard(g game) game {
 	r := g
-	//r.playerHitPoints--
+	r.playerHitPoints--
 	return checkWin(r)
 }
 
@@ -101,10 +106,6 @@ func hard(g game) game {
 
 func armor(g game) int {
 	for _, v := range g.effects {
-		if v.name == "shield" && v.ttl == 0 {
-			fmt.Println("balls")
-		}
-
 		if v.name == "shield" {
 			return 7
 		}

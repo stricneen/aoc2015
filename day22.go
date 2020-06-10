@@ -60,8 +60,8 @@ func Day22() {
 func initialGameStateTest1() game {
 	effects := make([]effect, 0)
 	return game{50, 500, 51, 9, effects, "", 0} // 900
-	return game{10, 250, 14, 8, effects, "", 0} // 641
-	return game{10, 250, 13, 8, effects, "", 0} // 226
+	// return game{10, 250, 14, 8, effects, "", 0} // 641
+	// return game{10, 250, 13, 8, effects, "", 0} // 226
 }
 
 func turn(c game, spell effectFn) game {

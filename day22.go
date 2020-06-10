@@ -66,13 +66,11 @@ func initialGameStateTest1() game {
 
 func turn(c game, spell effectFn) game {
 	g := c
-	//g := clone(c)
-	g.playerHitPoints--
 
-	// if g.playerHitPoints < 1 {
-	// 	g.winner = boss
-	// 	return g
-	// }
+	g = hard(g)
+	if won(g) {
+		return g
+	}
 
 	// Apply effects
 	g = applyEffects(g)
@@ -97,11 +95,11 @@ func turn(c game, spell effectFn) game {
 
 }
 
-// func hard(g game) game {
-// 	r := g
-// 	r.playerHitPoints--
-// 	return checkWin(r)
-// }
+func hard(g game) game {
+	r := g
+	r.playerHitPoints--
+	return checkWin(r)
+}
 
 // Part 1 : 900
 // Part 2 : 1242 th ?
@@ -145,14 +143,16 @@ func applyEffects(g game) game {
 	return checkWin(n)
 }
 
-func clone(g game) game {
-	tmp := make([]effect, len(g.effects))
-	copy(g.effects, tmp)
-	n := game{g.playerHitPoints, g.playerMama, g.bossHitPoints, g.bossDamage, tmp, g.winner, g.manaSpent}
-	return n
-}
+// func clone(g game) game {
+// 	tmp := make([]effect, len(g.effects))
+// 	copy(g.effects, tmp)
+// 	n := game{g.playerHitPoints, g.playerMama, g.bossHitPoints, g.bossDamage, tmp, g.winner, g.manaSpent}
+// 	return n
+// }
 
 // th 1242
+
+// 1216
 
 func tick(games []game) []game {
 
@@ -230,12 +230,12 @@ func allWon(games []game) bool {
 func checkWin(g game) game {
 	r := g
 
-	if g.playerHitPoints < 1 {
-		r.winner = boss
-		//fmt.Println(r)
-	}
 	if g.bossHitPoints < 1 {
 		r.winner = wizard
+		//fmt.Println(r)
+	}
+	if g.playerHitPoints < 1 {
+		r.winner = boss
 		//fmt.Println(r)
 	}
 	return r

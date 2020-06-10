@@ -26,9 +26,21 @@ type game struct {
 func Day22() {
 
 	init := make([]game, 0)
-	start := append(init, initialGameStateTest1())
 
-	results := tick(start)
+	results := append(init, initialGameStateTest1())
+	//results := tick(start)
+
+	for allWon(results) == false {
+
+		next := make([]game, 0)
+		for _, v := range results {
+			if v.winner == "wizard" || v.winner == "" {
+				next = append(next, v)
+			}
+		}
+
+		results = tick(next)
+	}
 
 	minMana := 100000
 	for _, v := range results {
@@ -44,13 +56,15 @@ func Day22() {
 
 func initialGameStateTest1() game {
 	effects := make([]effect, 0)
-	return game{50, 500, 51, 9, effects, "", 0}
+	// turns := make([]game, 0)
+	//return game{50, 500, 51, 9, effects, "", 0}
 	//return game{10, 250, 14, 8, effects, "", 0}
-	//return game{10, 250, 13, 8, effects, "", 0}
+	return game{10, 250, 13, 8, effects, "", 0}
 }
 
 func turn(g game, spell effectFn) game {
 
+	// PLayer turn
 	g = hard(g)
 	if won(g) {
 		return g
@@ -67,6 +81,7 @@ func turn(g game, spell effectFn) game {
 		return g
 	}
 
+	// Boss turn
 	g = applyEffects(g)
 	if won(g) {
 		return g
@@ -79,15 +94,18 @@ func turn(g game, spell effectFn) game {
 
 func hard(g game) game {
 	r := g
-	r.playerHitPoints--
+	//r.playerHitPoints--
 	return checkWin(r)
 }
 
+// Part 1 : 900
+// Part 2 : 1242 th ?
+
 func armor(g game) int {
 	for _, v := range g.effects {
-		// if v.name == "shield" && v.ttl == 0 {
-		// 	fmt.Println("balls")
-		// }
+		if v.name == "shield" && v.ttl == 0 {
+			fmt.Println("balls")
+		}
 
 		if v.name == "shield" {
 			return 7
@@ -127,16 +145,21 @@ func applyEffects(g game) game {
 
 // th 1242
 
+var min int = 10000
+
 func tick(games []game) []game {
 
 	next := make([]game, 0)
 
 	for _, g := range games {
 
-		if won(g) {
-			next = append(next, g)
-			continue
-		}
+		// if won(g) {
+		// 	if g.winner == "wizard" && g.manaSpent < min {
+		// 		min = g.manaSpent
+		// 		next = append(next, g)
+		// 	}
+		// 	continue
+		// }
 
 		if canCast(g, "missle", 53) {
 			next = append(next, turn(g, func(g game) game {
@@ -172,12 +195,7 @@ func tick(games []game) []game {
 		}
 	}
 
-	if allWon(next) {
-		return next
-	}
-
-	return tick(next)
-
+	return next
 }
 
 func won(g game) bool {
@@ -207,11 +225,18 @@ func allWon(games []game) bool {
 
 func checkWin(g game) game {
 	r := g
+
+	if g.playerHitPoints < 1 && g.bossHitPoints < 1 {
+		fmt.Println("fff")
+	}
+
 	if g.playerHitPoints < 1 {
 		r.winner = "boss"
+		//fmt.Println(r)
 	}
 	if g.bossHitPoints < 1 {
 		r.winner = "wizard"
+		//fmt.Println(r)
 	}
 	return r
 }

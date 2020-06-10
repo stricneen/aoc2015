@@ -28,7 +28,6 @@ func Day22() {
 	init := make([]game, 0)
 
 	results := append(init, initialGameStateTest1())
-	//results := tick(start)
 
 	for allWon(results) == false {
 
@@ -56,10 +55,9 @@ func Day22() {
 
 func initialGameStateTest1() game {
 	effects := make([]effect, 0)
-	// turns := make([]game, 0)
-	//return game{50, 500, 51, 9, effects, "", 0}
-	//return game{10, 250, 14, 8, effects, "", 0}
-	return game{10, 250, 13, 8, effects, "", 0}
+	return game{50, 500, 51, 9, effects, "", 0} // 9000
+	//return game{10, 250, 14, 8, effects, "", 0} // 641
+	//return game{10, 250, 13, 8, effects, "", 0} // 226
 }
 
 func turn(g game, spell effectFn) game {
@@ -153,13 +151,10 @@ func tick(games []game) []game {
 
 	for _, g := range games {
 
-		// if won(g) {
-		// 	if g.winner == "wizard" && g.manaSpent < min {
-		// 		min = g.manaSpent
-		// 		next = append(next, g)
-		// 	}
-		// 	continue
-		// }
+		if won(g) {
+			next = append(next, g)
+			continue
+		}
 
 		if canCast(g, "missle", 53) {
 			next = append(next, turn(g, func(g game) game {

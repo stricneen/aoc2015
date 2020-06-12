@@ -6,11 +6,6 @@ import (
 	"strconv"
 )
 
-// type pair struct {
-// 	x int
-// 	y int
-// }
-
 func pairs(group int, sum int, set []int) [][]int {
 	r := make([][]int, 0)
 	for i := 0; i < len(set); i++ {
@@ -18,11 +13,8 @@ func pairs(group int, sum int, set []int) [][]int {
 			if set[i]+set[j] == sum {
 				r = append(r, []int{group - sum, set[i], set[j]})
 			}
-
 		}
-
 	}
-
 	return r
 }
 

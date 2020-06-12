@@ -11,15 +11,16 @@ import (
 // 	y int
 // }
 
-func pairs(sum int, set []int) [][]int {
+func pairs(group int, sum int, set []int) [][]int {
 	r := make([][]int, 0)
 	for i := 0; i < len(set); i++ {
 		for j := i + 1; j < len(set); j++ {
 			if set[i]+set[j] == sum {
-				r = append(r, []int{set[i], set[j]})
+				r = append(r, []int{group - sum, set[i], set[j]})
 			}
 
 		}
+
 	}
 
 	return r
@@ -30,12 +31,33 @@ func exec24(p []int) {
 	for _, v := range p {
 		t += v
 	}
+	group := t / 3
 
-	fmt.Println("Total", t, "Group", t/3)
+	fmt.Println("Total", t, "Group", group)
 
-	ps := pairs(t/3, p)
-	fmt.Println(ps)
+	//	ps := pairs(t/3, p)
 
+	for i := 0; i < len(p); i++ {
+
+		ps := pairs(group, group-p[i], remove(p[i], p))
+
+		//fmt.Println(group - p[i])
+		fmt.Println(ps)
+		fmt.Println()
+	}
+
+}
+
+func remove(i int, is []int) []int {
+	c := 0
+	r := make([]int, len(is)-1)
+	for _, v := range is {
+		if v != i {
+			r[c] = v
+			c++
+		}
+	}
+	return r
 }
 
 func onScan24(scan *bufio.Scanner) {
@@ -43,12 +65,12 @@ func onScan24(scan *bufio.Scanner) {
 	p := make([]int, 0)
 	for scan.Scan() {
 		ln := scan.Text()
-		t, _ := strconv.Atoi(ln)
-		p = append(p, t)
-
 		if ln == "#" {
 			break
 		}
+
+		t, _ := strconv.Atoi(ln)
+		p = append(p, t)
 		//fmt.Println(ln)
 	}
 	exec24(p)

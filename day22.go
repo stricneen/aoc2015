@@ -67,7 +67,7 @@ func initialGameStateTest1() game {
 func turn(c game, spell effectFn) game {
 	g := c
 
-	g = hard(g)
+	g = hard(g) // Part 2
 	if won(g) {
 		return g
 	}
@@ -211,7 +211,7 @@ func won(g game) bool {
 
 func canCast(g game, effect string, cost int) bool {
 	for _, s := range g.effects {
-		if s.name == effect {
+		if s.name == effect && s.ttl > 1 {
 			return false
 		}
 	}
